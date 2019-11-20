@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.benjaminnwarner.musicianstoolbelt.R
 import kotlinx.android.synthetic.main.fragment_gallery.view.*
 
@@ -18,7 +18,7 @@ class GalleryFragment : Fragment() {
         galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
 
-        root.fab_new_recording.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.nav_recorder, null))
+        root.fab_new_recording.setOnClickListener { root.findNavController().navigate(R.id.nav_create_recording) }
 
         return root
     }
