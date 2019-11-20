@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.ui.permissions.PermissionCheckingFragment
 import kotlinx.android.synthetic.main.fragment_recorder.view.*
@@ -132,9 +131,5 @@ class RecorderFragment : PermissionCheckingFragment() {
         player?.release()
         player = null
         recorderViewModel.playing.value = false
-    }
-
-    override fun handlePermissionDenial() {
-        view?.findNavController()?.popBackStack()
     }
 }

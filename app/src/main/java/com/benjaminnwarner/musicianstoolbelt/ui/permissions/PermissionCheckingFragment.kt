@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.benjaminnwarner.musicianstoolbelt.R
 
 abstract class PermissionCheckingFragment : Fragment() {
@@ -91,6 +92,8 @@ abstract class PermissionCheckingFragment : Fragment() {
         this.handlePermissionDenial()
     }
 
-    abstract fun handlePermissionDenial()
+    private fun handlePermissionDenial(){
+        view?.findNavController()?.popBackStack()
+    }
 
 }
