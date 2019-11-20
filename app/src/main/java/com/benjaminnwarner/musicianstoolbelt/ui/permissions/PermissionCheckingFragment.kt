@@ -8,20 +8,25 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import com.benjaminnwarner.musicianstoolbelt.R
 
 abstract class PermissionCheckingFragment : Fragment() {
 
     private val PERMISSION_REQUEST = 200
 
-    protected fun checkPermissions(permission: String) {
+
+    protected fun hasPermission(permission: String): Boolean {
         if(ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED) {
-            if(shouldShowRequestPermissionRationale(permission)) {
-                showPermissionRationale(permission, reAsking = false)
-            } else {
-                requestPermissions(arrayOf(permission), PERMISSION_REQUEST)
-            }
+            return false
+        }
+        return true
+    }
+
+    protected fun checkPermissions(permission: String) {
+        if(shouldShowRequestPermissionRationale(permission)) {
+            showPermissionRationale(permission, reAsking = false)
+        } else {
+            requestPermissions(arrayOf(permission), PERMISSION_REQUEST)
         }
     }
 

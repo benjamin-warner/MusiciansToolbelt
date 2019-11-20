@@ -58,13 +58,17 @@ class RecorderFragment : PermissionCheckingFragment() {
     }
 
     private fun onStartStopRecordingButtonPress() {
-        checkPermissions(Manifest.permission.RECORD_AUDIO)
-//        if(recorderViewModel.recording.value == true){
-//            stopRecording()
-//            displayRecordingInfo()
-//        } else {
-//            startRecording()
-//        }
+        if(hasPermission(Manifest.permission.RECORD_AUDIO)) {
+            when (recorderViewModel.recording.value) {
+                true -> {
+                    stopRecording()
+                    displayRecordingInfo()
+                }
+                false -> startRecording()
+            }
+        } else {
+            checkPermissions(Manifest.permission.RECORD_AUDIO)
+        }
     }
 
     private fun displayRecordingInfo() {
