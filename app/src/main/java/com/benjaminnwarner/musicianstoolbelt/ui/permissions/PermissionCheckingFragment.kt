@@ -33,9 +33,6 @@ class PermissionCheckingFragment(private val permissibleAction: IPermissibleActi
         params.height = ViewGroup.LayoutParams.MATCH_PARENT
         dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
-    fun actionPermissible(): Boolean {
-        return !permissibleAction.permissions.any { permissionUnGranted(it) }
-    }
 
     private fun missingPermissions(): Array<String>{
         return permissibleAction.permissions.filter { permissionUnGranted(it) }.toTypedArray()
