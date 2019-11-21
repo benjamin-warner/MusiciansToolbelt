@@ -1,6 +1,5 @@
 package com.benjaminnwarner.musicianstoolbelt.ui.recorder
 
-import android.Manifest
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -11,12 +10,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.benjaminnwarner.musicianstoolbelt.R
-import com.benjaminnwarner.musicianstoolbelt.ui.permissions.PermissionCheckingFragment
+import com.benjaminnwarner.musicianstoolbelt.ui.permissions.PermissionFragment
 import kotlinx.android.synthetic.main.fragment_recorder.view.*
 import java.io.IOException
 
-
-class RecorderFragment : PermissionCheckingFragment() {
+class RecorderFragment : PermissionFragment(RecorderPermission) {
 
     private lateinit var recorderViewModel: RecorderViewModel
     private lateinit var filePath: String
@@ -27,7 +25,7 @@ class RecorderFragment : PermissionCheckingFragment() {
         recorderViewModel = ViewModelProviders.of(this).get(RecorderViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_recorder, container, false)
 
-        filePath =  "${context?.filesDir.toString()}/recording.m4a"
+        filePath = "${context?.filesDir.toString()}/recording.m4a"
 
         root.start_stop_record_button.setOnClickListener { onStartStopRecordingButtonPress() }
 
@@ -55,18 +53,9 @@ class RecorderFragment : PermissionCheckingFragment() {
     }
 
     private fun onStartStopRecordingButtonPress() {
-        val permissions = arrayOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-        if(hasPermission(permissions)) {
-            when (recorderViewModel.recording.value) {
-                true -> stopRecording()
-                false -> startRecording()
-            }
-        } else {
-            requestPermission(permissions)
+        when (recorderViewModel.recording.value) {
+            true -> stopRecording()
+            false -> startRecording()
         }
     }
 

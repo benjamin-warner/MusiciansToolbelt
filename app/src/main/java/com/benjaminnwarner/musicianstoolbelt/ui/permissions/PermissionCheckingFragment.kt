@@ -1,99 +1,70 @@
 package com.benjaminnwarner.musicianstoolbelt.ui.permissions
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import com.benjaminnwarner.musicianstoolbelt.R
+import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.permission_recorder.view.*
 
-abstract class PermissionCheckingFragment : Fragment() {
+class PermissionCheckingFragment(private val permissibleAction: IPermissibleAction) : DialogFragment() {
 
-    private val PERMISSION_REQUEST = 200
+    private val requestCode = 200
+    private lateinit var permissionGrantedCallback: ( (PermissionCheckingFragment) -> Unit)
+    private lateinit var cancelledListener: ( (PermissionCheckingFragment) -> Unit)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val root =  inflater.inflate(permissibleAction.layoutId, container, false)
 
 
-    protected fun hasPermission(permission: String): Boolean {
-        if(ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED) {
-            return false
-        }
-        return true
+        root.get_started.setOnClickListener { requestPermission() }
+        root.back.setOnClickListener { cancelledListener.invoke(this) }
+
+        return root
     }
 
-    protected fun checkPermissions(permission: String) {
-        if(shouldShowRequestPermissionRationale(permission)) {
-            showPermissionRationale(permission, reAsking = false)
-        } else {
-            requestPermissions(arrayOf(permission), PERMISSION_REQUEST)
-        }
+    override fun onResume() {
+        super.onResume()
+        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        dialog!!.window!!.attributes = params as WindowManager.LayoutParams
+    }
+    fun actionPermissible(): Boolean {
+        return !permissibleAction.permissions.any { permissionUnGranted(it) }
+    }
+
+    private fun missingPermissions(): Array<String>{
+        return permissibleAction.permissions.filter { permissionUnGranted(it) }.toTypedArray()
+    }
+
+    private fun permissionUnGranted(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestPermission() {
+        requestPermissions(missingPermissions(), requestCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
-            PERMISSION_REQUEST -> {
-                if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED){
-                    showPermissionRationale(permissions[0], reAsking = true)
+            this.requestCode -> {
+                if(grantResults.all {it == PackageManager.PERMISSION_GRANTED }){
+                    permissionGrantedCallback.invoke(this)
                 }
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
-    private fun showPermissionRationale(permission: String, reAsking: Boolean) {
-        val rationalLayout = getPermissionRationalLayout(permission)
-        val dialog = buildDialog(rationalLayout, permission, reAsking)
-        dialog.show()
+    fun onPermissionsGranted(callback: ( (PermissionCheckingFragment) -> Unit)) {
+        permissionGrantedCallback = callback
     }
 
-    private fun getPermissionRationalLayout(permission: String): Int {
-        return when (permission) {
-            Manifest.permission.RECORD_AUDIO -> R.layout.dialog_permission_mic
-            else -> throw IllegalStateException()
-        }
+    fun onCancelled(callback: ( (PermissionCheckingFragment) -> Unit)) {
+        cancelledListener = callback
     }
-
-    @SuppressLint("InflateParams")
-    private fun buildDialog(rationalLayout: Int, permission: String, reAsking: Boolean): AlertDialog {
-        val builder: AlertDialog.Builder? = activity?.let {
-            AlertDialog.Builder(it)
-        }
-
-        val negativeText =  if (reAsking) getString(R.string.im_sure) else getString(R.string.deny)
-        val positiveText = if (reAsking) getString(R.string.allow_access) else getString(R.string.allow)
-        val builderContent = layoutInflater.inflate(R.layout.dialog_permission_mic, null)
-        val rationaleText = builderContent.findViewById(R.id.permission_reason_text) as TextView
-        if (reAsking) rationaleText.text = getString(R.string.need_mic_permission_reask)
-
-        builder?.apply {
-            setView(builderContent)
-            setPositiveButton(positiveText) { dialog, _ ->
-                onPermissionGranted(dialog, permission)
-            }
-            setNegativeButton(negativeText) { dialog, _ ->
-                onPermissionDenied(dialog)
-            }
-        }
-
-
-
-        return builder!!.create()
-    }
-
-    private fun onPermissionGranted(dialog: DialogInterface?, permission: String) {
-        dialog?.dismiss()
-        requestPermissions(arrayOf(permission), PERMISSION_REQUEST)
-    }
-
-    private fun onPermissionDenied(dialog: DialogInterface?) {
-        dialog?.dismiss()
-        this.handlePermissionDenial()
-    }
-
-    private fun handlePermissionDenial(){
-        view?.findNavController()?.popBackStack()
-    }
-
 }

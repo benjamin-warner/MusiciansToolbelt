@@ -15,10 +15,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="play">Play</string>
-    <string name="need_mic_permission">Musician\'s Toolbelt needs microphone access to record your music.</string>
-    <string name="need_mic_permission_reask">Are you sure? You can\'t use the recorder without microphone access.</string>
-    <string name="deny">Deny</string>
-    <string name="allow">Allow</string>
-    <string name="im_sure">I\'m Sure</string>
-    <string name="allow_access">Allow Access</string>
+    <string name="need_recorder_permission">Musician\'s Toolbelt needs microphone access to record music, and file access to save your recordings where you can see them.</string>
+    <string name="get_started">Get Started</string>
+    <string name="back">Back</string>
 </resources>
