@@ -1,7 +1,6 @@
 package com.benjaminnwarner.musicianstoolbelt.ui.recorder
 
 import android.Manifest
-import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -14,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.ui.permissions.PermissionCheckingFragment
 import kotlinx.android.synthetic.main.fragment_recorder.view.*
-import java.io.File
 import java.io.IOException
 
 
@@ -29,15 +27,15 @@ class RecorderFragment : PermissionCheckingFragment() {
         recorderViewModel = ViewModelProviders.of(this).get(RecorderViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_recorder, container, false)
 
+        filePath =  "${context?.filesDir.toString()}/recording.m4a"
 
-        filePath = "${context?.filesDir}/audiorecordtest.m4a"
+        root.start_stop_record_button.setOnClickListener { onStartStopRecordingButtonPress() }
 
         recorderViewModel.recording.observe(this, Observer {
             root.start_stop_record_button.text =
                 if (it) getString(R.string.stop) else getString(R.string.start)
         })
 
-        root.start_stop_record_button.setOnClickListener { onStartStopRecordingButtonPress() }
         root.start_stop_playback_button.setOnClickListener { onStartStopPlaybackButtonPress() }
 
         recorderViewModel.playing.observe(this, Observer {
@@ -57,32 +55,20 @@ class RecorderFragment : PermissionCheckingFragment() {
     }
 
     private fun onStartStopRecordingButtonPress() {
-        if(hasPermission(Manifest.permission.RECORD_AUDIO)) {
+        val permissions = arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+        if(hasPermission(permissions)) {
             when (recorderViewModel.recording.value) {
-                true -> {
-                    stopRecording()
-                    displayRecordingInfo()
-                }
+                true -> stopRecording()
                 false -> startRecording()
             }
         } else {
-            checkPermissions(Manifest.permission.RECORD_AUDIO)
+            requestPermission(permissions)
         }
     }
-
-    private fun displayRecordingInfo() {
-        val mmr = MediaMetadataRetriever()
-        mmr.setDataSource(filePath)
-        val file = File(filePath)
-        val bitrate = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE)
-        val duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        val mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE)
-        Log.d("bitrate", bitrate)
-        Log.d("duration", duration)
-        Log.d("mime", mime)
-        Log.d("length", "${ file.length()/1000 }kb")
-    }
-
 
     private fun startRecording() {
         recorder = MediaRecorder().apply {
@@ -91,7 +77,13 @@ class RecorderFragment : PermissionCheckingFragment() {
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setAudioEncodingBitRate(128000)
             setAudioSamplingRate(44100)
+            setMaxDuration(10000)
             setOutputFile(filePath)
+            setOnInfoListener { _, what, _ ->
+                if(what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED){
+                 stopRecording()
+                }
+            }
 
             try {
                 prepare()
