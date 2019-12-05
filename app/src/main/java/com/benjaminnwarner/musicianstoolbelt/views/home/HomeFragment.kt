@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.ui.home
+package com.benjaminnwarner.musicianstoolbelt.views.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

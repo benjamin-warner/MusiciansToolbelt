@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.ui.permissions
+package com.benjaminnwarner.musicianstoolbelt.views.permissions
 
 interface IPermissibleAction {
     val permissions: Array<String>

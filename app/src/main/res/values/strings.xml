@@ -18,4 +18,6 @@
     <string name="need_recorder_permission">Musician\'s Toolbelt needs microphone access to record music, and file access to save your recordings where you can see them.</string>
     <string name="get_started">Get Started</string>
     <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

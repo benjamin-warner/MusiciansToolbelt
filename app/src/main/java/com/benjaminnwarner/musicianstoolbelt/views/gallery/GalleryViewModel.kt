@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.ui.gallery
+package com.benjaminnwarner.musicianstoolbelt.views.gallery
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

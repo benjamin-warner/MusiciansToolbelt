@@ -1,8 +1,8 @@
-package com.benjaminnwarner.musicianstoolbelt.ui.recorder
+package com.benjaminnwarner.musicianstoolbelt.views.recorder
 
 import android.Manifest
 import com.benjaminnwarner.musicianstoolbelt.R
-import com.benjaminnwarner.musicianstoolbelt.ui.permissions.IPermissibleAction
+import com.benjaminnwarner.musicianstoolbelt.views.permissions.IPermissibleAction
 
 
 object RecorderPermission : IPermissibleAction {
