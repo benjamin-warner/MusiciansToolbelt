@@ -1,5 +1,7 @@
 package com.benjaminnwarner.musicianstoolbelt.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
@@ -11,9 +13,26 @@ class RecordingViewModel(
     private val id: Int
 ) : ViewModel() {
 
+    private val savedState = MutableLiveData<Boolean>().apply { value = false }
+    val saved: LiveData<Boolean> = savedState
+
+    private val recordingState = MutableLiveData<Recording>()
+    val recording: LiveData<Recording> = recordingState
+
+    init {
+        if(id != 0){
+            viewModelScope.launch {
+                recordingRepository.getRecording(id)
+            }
+        }
+    }
+
     fun createRecordingRecord(filename: String) {
         viewModelScope.launch {
-            recordingRepository.saveRecording(Recording(filename = filename))
+            val id = recordingRepository.saveRecording(Recording(filename = filename))
+            if(id != -1L){
+                savedState.value = true
+            }
         }
     }
 }

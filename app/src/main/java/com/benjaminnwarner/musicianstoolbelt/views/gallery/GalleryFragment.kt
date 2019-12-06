@@ -20,14 +20,13 @@ class GalleryFragment : Fragment() {
         RecordingRepositoryInjector.provideRecordingListViewModelFactory(requireActivity())
     }
 
-    private lateinit var recordingAdapter: RecordingAdapter
+    private var recordingAdapter = RecordingAdapter(listOf())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
 
         root.fab_new_recording.setOnClickListener { root.findNavController().navigate(R.id.nav_create_recording) }
 
-        recordingAdapter = RecordingAdapter(listOf())
         root.recorder_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = recordingAdapter

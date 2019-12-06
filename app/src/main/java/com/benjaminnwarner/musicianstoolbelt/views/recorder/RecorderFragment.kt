@@ -17,6 +17,7 @@ import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaRecorderWrapper
 import kotlinx.android.synthetic.main.fragment_recorder.view.*
 import java.io.File
+import java.io.IOException
 
 class RecorderFragment : PermissionFragment(RecorderPermission) {
 
@@ -43,7 +44,10 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
     }
 
     private fun setUpListeners(root: View) {
-        recorder.setOnInterruptedListener { recorderViewModel.recording.value = false }
+        recorder.setOnInterruptedListener {
+            recorderViewModel.recording.value = false
+            recorderViewModel.unsavedChanges.value = true
+        }
         player.setOnCompletionListener { recorderViewModel.playing.value = false }
 
         root.start_stop_record_button.setOnClickListener { onStartStopRecordingButtonPress() }
@@ -126,8 +130,17 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
     private fun onSave() {
         val temp = File(recordingDirectory, tempRecordingFile)
         val filename = "${temp.lastModified()}.m4a"
-        val persistent = File(recordingDirectory, filename)
-        temp.renameTo(persistent)
         recordingViewModel.createRecordingRecord(filename)
+
+        recordingViewModel.saved.observe(this, Observer {
+            try {
+                val persistent = File(recordingDirectory, filename)
+                temp.renameTo(persistent)
+            } catch(e: IOException){
+
+            } finally {
+                findNavController().popBackStack()
+            }
+        })
     }
 }
