@@ -3,6 +3,7 @@ package com.benjaminnwarner.musicianstoolbelt.injectors
 import android.content.Context
 import com.benjaminnwarner.musicianstoolbelt.database.AppDatabase
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
+import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingListViewModelFactory
 import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModelFactory
 
 object RecordingRepositoryInjector {
@@ -17,5 +18,11 @@ object RecordingRepositoryInjector {
         id: Int
     ): RecordingViewModelFactory {
         return RecordingViewModelFactory(getRecordingRepository(context), id)
+    }
+
+    fun provideRecordingListViewModelFactory(
+        context: Context
+    ): RecordingListViewModelFactory {
+        return RecordingListViewModelFactory(getRecordingRepository(context))
     }
 }

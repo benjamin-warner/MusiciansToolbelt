@@ -20,4 +20,6 @@
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="abandon_unsaved">You have unsaved changes. Discard?</string>
 </resources>

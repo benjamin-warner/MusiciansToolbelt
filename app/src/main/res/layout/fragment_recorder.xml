@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:enabled="false"
             android:text="@string/play" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -53,6 +54,7 @@
             android:id="@+id/save_recording_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/save" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

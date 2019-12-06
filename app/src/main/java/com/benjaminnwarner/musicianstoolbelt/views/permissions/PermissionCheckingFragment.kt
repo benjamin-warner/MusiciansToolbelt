@@ -19,7 +19,6 @@ class PermissionCheckingFragment(private val permissibleAction: IPermissibleActi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root =  inflater.inflate(permissibleAction.layoutId, container, false)
 
-
         root.get_started.setOnClickListener { requestPermission() }
         root.back.setOnClickListener { cancelledListener.invoke(this) }
 

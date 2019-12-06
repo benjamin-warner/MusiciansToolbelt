@@ -19,6 +19,6 @@ class RecorderViewModel : ViewModel() {
     }
 
     val unsavedChanges = MutableLiveData<Boolean>().apply {
-        value = true
+        value = false
     }
 }

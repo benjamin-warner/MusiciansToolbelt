@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -62,6 +63,13 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
             root.start_stop_playback_button.text =
                 if (it) getString(R.string.stop) else getString(R.string.play)
         })
+
+        recorderViewModel.unsavedChanges.observe(this, Observer {
+            if(it) {
+                root.save_recording_button.isEnabled = true
+                root.start_stop_playback_button.isEnabled = true
+            }
+        })
     }
 
     private fun onStartStopPlaybackButtonPress() {
@@ -94,7 +102,25 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
     }
 
     private fun onCancel(){
-        findNavController().popBackStack()
+        if(recorderViewModel.unsavedChanges.value == true) {
+            val alertDialog: AlertDialog? = activity?.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setMessage(getString(R.string.abandon_unsaved))
+                    setPositiveButton(R.string.back) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    setNegativeButton(R.string.discard) { dialog, _ ->
+                        dialog.dismiss()
+                        findNavController().popBackStack()
+                    }
+                }
+                builder.create()
+            }
+            alertDialog?.show()
+        } else {
+            findNavController().popBackStack()
+        }
     }
 
     private fun onSave() {
