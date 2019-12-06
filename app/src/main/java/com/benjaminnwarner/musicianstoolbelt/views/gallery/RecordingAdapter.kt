@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 
-class RecordingAdapter(private val list: List<Recording>)
+class RecordingAdapter(private val list: List<Recording>, private val itemClickCallback: ( (Recording) -> Unit ))
     : RecyclerView.Adapter<RecordingViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return RecordingViewHolder(inflater, parent)
+        return RecordingViewHolder(inflater, parent, itemClickCallback)
     }
 
     override fun onBindViewHolder(holder: RecordingViewHolder, position: Int) {

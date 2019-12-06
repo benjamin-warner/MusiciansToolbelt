@@ -19,6 +19,9 @@
         <action
             android:id="@+id/nav_create_recording"
             app:destination="@id/nav_recorder" />
+        <action
+            android:id="@+id/nav_show_recording_detail"
+            app:destination="@+id/nav_recording_detail" />
     </fragment>
 
     <fragment
@@ -32,5 +35,16 @@
         android:name="com.benjaminnwarner.musicianstoolbelt.views.recorder.RecorderFragment"
         android:label="@string/recorder"
         tools:layout="@layout/fragment_recorder"/>
+
+    <fragment
+        android:id="@+id/nav_recording_detail"
+        android:name="com.benjaminnwarner.musicianstoolbelt.views.gallery.RecordingDetailFragment"
+        android:label="@string/recording_details"
+        tools:layout="@layout/fragment_recording_details" >
+        <argument
+            android:name="id"
+            app:argType="long"
+            app:nullable="false"/>
+    </fragment>
 
 </navigation>

@@ -4,7 +4,7 @@ class RecordingRepository private constructor(private val recordingDao: Recordin
 
     fun getRecordings() = recordingDao.getRecordings()
 
-    suspend fun getRecording(id: Int) = recordingDao.getRecording(id)
+    fun getRecording(id: Long) = recordingDao.getRecording(id)
 
     suspend fun saveRecording(recording: Recording) = recordingDao.insert(recording)
 

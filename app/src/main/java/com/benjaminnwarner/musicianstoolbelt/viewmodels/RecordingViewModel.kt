@@ -10,22 +10,13 @@ import kotlinx.coroutines.launch
 
 class RecordingViewModel(
     private val recordingRepository: RecordingRepository,
-    private val id: Int
+    id: Long
 ) : ViewModel() {
 
     private val savedState = MutableLiveData<Boolean>().apply { value = false }
     val saved: LiveData<Boolean> = savedState
 
-    private val recordingState = MutableLiveData<Recording>()
-    val recording: LiveData<Recording> = recordingState
-
-    init {
-        if(id != 0){
-            viewModelScope.launch {
-                recordingRepository.getRecording(id)
-            }
-        }
-    }
+    val recording: LiveData<Recording> = recordingRepository.getRecording(id)
 
     fun createRecordingRecord(filename: String) {
         viewModelScope.launch {

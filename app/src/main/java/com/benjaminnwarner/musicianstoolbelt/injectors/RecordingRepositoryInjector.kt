@@ -15,7 +15,7 @@ object RecordingRepositoryInjector {
 
     fun provideRecordingViewModelFactory(
         context: Context,
-        id: Int
+        id: Long
     ): RecordingViewModelFactory {
         return RecordingViewModelFactory(getRecordingRepository(context), id)
     }

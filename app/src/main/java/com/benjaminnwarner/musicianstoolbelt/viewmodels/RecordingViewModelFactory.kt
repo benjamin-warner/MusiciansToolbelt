@@ -7,7 +7,7 @@ import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingReposit
 
 class RecordingViewModelFactory(
     private val recordingRepository: RecordingRepository,
-    private val id: Int
+    private val id: Long
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
