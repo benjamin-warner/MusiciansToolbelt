@@ -1,24 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
-    android:layout_height="120dp">
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:indeterminate="false"
-        android:progressDrawable="@drawable/progress_recorder"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="1000"
-        android:progress="1000" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="240dp"
+        android:layout_height="120dp">
 
-    <ToggleButton
-        android:id="@+id/widget_recorder_record_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textOn=""
-        android:textOff=""
-        android:background="@drawable/selector_recorder"/>
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-</RelativeLayout>
+            <ProgressBar
+                android:id="@+id/widget_recorder_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:indeterminate="false"
+                android:max="1000"
+                android:progress="1000"
+                android:progressDrawable="@drawable/progress_recorder" />
+
+            <ToggleButton
+                android:id="@+id/widget_recorder_record_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_recorder"
+                android:textOff=""
+                android:textOn="" />
+
+            <ToggleButton
+                android:id="@+id/widget_recorder_playback_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/selector_player"
+                android:textOff=""
+                android:textOn="" />
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/widget_recorder_re_record"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_recorder_re_record"
+            android:contentDescription="@string/re_record"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

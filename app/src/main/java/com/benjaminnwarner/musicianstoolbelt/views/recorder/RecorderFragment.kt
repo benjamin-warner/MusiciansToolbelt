@@ -15,7 +15,7 @@ import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModel
 import com.benjaminnwarner.musicianstoolbelt.views.permissions.PermissionFragment
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaRecorderWrapper
-import kotlinx.android.synthetic.main.fragment_recorder.view.*
+import kotlinx.android.synthetic.main.fragment_recorder_old.view.*
 import java.io.File
 import java.io.IOException
 
@@ -33,7 +33,7 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         recorderViewModel = ViewModelProviders.of(this).get(RecorderViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_recorder, container, false)
+        val root = inflater.inflate(R.layout.fragment_recorder_old, container, false)
 
         recordingDirectory = context?.filesDir.toString()
 

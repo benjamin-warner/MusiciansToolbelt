@@ -23,4 +23,5 @@
     <string name="discard">Discard</string>
     <string name="abandon_unsaved">You have unsaved changes. Discard?</string>
     <string name="recording_details">Recording Details</string>
+    <string name="re_record">Re-record</string>
 </resources>
