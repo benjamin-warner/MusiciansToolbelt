@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="120dp">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/progress_recorder"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:max="1000"
+        android:progress="1000" />
+
+    <ToggleButton
+        android:id="@+id/widget_recorder_record_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/selector_recorder"/>
+
+</RelativeLayout>
