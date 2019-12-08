@@ -3,7 +3,6 @@ package com.benjaminnwarner.musicianstoolbelt.widget
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.PorterDuff
-import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
@@ -26,7 +25,7 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
     private lateinit var animator: ObjectAnimator
 
     private var filename: String? = null
-    private var duration: Int = 0
+    private var duration: Long = 0
     private val filePath: String get() ="${context.filesDir.absolutePath}/${filename ?: TEMP_RECORDING_FILENAME}"
 
     init {
@@ -72,11 +71,7 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
     }
 
     private fun setPlaybackMode(){
-        val mmr = MediaMetadataRetriever()
-        mmr.setDataSource(filePath)
-        duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toInt()
-        initProgressbar(duration, ContextCompat.getColor(context, R.color.colorPlayerBlue))
-
+        initProgressbar(duration.toInt(), ContextCompat.getColor(context, R.color.colorPlayerBlue))
         widget_recorder_record_toggle.visibility = View.GONE
         widget_recorder_playback_toggle.visibility = View.VISIBLE
         widget_recorder_re_record.visibility = View.VISIBLE
@@ -86,9 +81,11 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
         if(active){
             recorder.recordTo(filePath)
             animator.start()
+            duration = System.currentTimeMillis()
         } else {
             animator.cancel()
             recorder.stop()
+            duration = System.currentTimeMillis() - duration
             setSourceFile(TEMP_RECORDING_FILENAME)
             setPlaybackMode()
         }
@@ -101,7 +98,7 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
         } else {
             player.stop()
             animator.cancel()
-            widget_recorder_progress.progress = duration
+            widget_recorder_progress.progress = duration.toInt()
         }
     }
 
@@ -121,6 +118,6 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
 
     private fun onPlaybackCompleted(){
         widget_recorder_playback_toggle.isChecked = false
-        widget_recorder_progress.progress = duration
+        widget_recorder_progress.progress = duration.toInt()
     }
 }

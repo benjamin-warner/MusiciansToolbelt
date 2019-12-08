@@ -46,29 +46,15 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/widget_recorder_re_record"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_recorder_re_record"
+            android:visibility="visible"
+            android:contentDescription="@string/re_record"
             app:layout_constraintStart_toEndOf="@+id/relativeLayout"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/widget_recorder_re_record"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/ic_recorder_re_record"
-                android:visibility="gone"
-                android:contentDescription="@string/re_record" />
-
-            <ImageButton
-                android:id="@+id/widget_recorder_cancel_re_record"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/ic_undo"
-                android:visibility="gone"
-                android:contentDescription="@string/back" />
-
-        </RelativeLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
