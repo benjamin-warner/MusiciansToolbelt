@@ -7,7 +7,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingDao
-import com.benjaminnwarner.musicianstoolbelt.utilities.DATABASE_NAME
+
+
+const val DATABASE_NAME = "musicians-toolbelt-db"
 
 @Database(entities = [Recording::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
