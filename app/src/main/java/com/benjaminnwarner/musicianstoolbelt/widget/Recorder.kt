@@ -3,6 +3,7 @@ package com.benjaminnwarner.musicianstoolbelt.widget
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.PorterDuff
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
@@ -13,12 +14,13 @@ import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaRecorderWrapper
 import kotlinx.android.synthetic.main.widget_recorder.view.*
+import java.lang.Exception
 
 
 const val TEMP_RECORDING_FILENAME = "recording_temp.m4a"
 const val MAX_RECORDING_DURATION = 10000
 
-class Recorder constructor(context: Context, attributeSet: AttributeSet): LinearLayout(context, attributeSet) {
+class Recorder(context: Context, attributeSet: AttributeSet): LinearLayout(context, attributeSet) {
 
     private val recorder = MediaRecorderWrapper()
     private val player = MediaPlayerWrapper()
@@ -28,12 +30,13 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
     private var duration: Long = 0
     private val filePath: String get() ="${context.filesDir.absolutePath}/${filename ?: TEMP_RECORDING_FILENAME}"
 
+    private var reRecordCallback: (() -> Unit)? = null
+
     init {
         inflate(context, R.layout.widget_recorder,this)
 
         recorder.setOnInterruptedListener(this::onRecordingInterrupted)
         player.setOnCompletionListener(this::onPlaybackCompleted)
-
 
         if(filename == null){
             setRecordingMode()
@@ -43,12 +46,24 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
 
         widget_recorder_playback_toggle.setOnCheckedChangeListener{ _, s -> onPlaybackToggle(s) }
         widget_recorder_record_toggle.setOnCheckedChangeListener { _, s -> onRecordToggle(s) }
-        widget_recorder_re_record.setOnClickListener { setRecordingMode() }
+        widget_recorder_re_record.setOnClickListener {
+            if(reRecordCallback == null){
+                setRecordingMode()
+            } else {
+                this.reRecordCallback?.invoke()
+            }
+        }
     }
 
     fun setSourceFile(filename: String){
         this.filename = filename
+        val mmr = MediaMetadataRetriever().apply{ setDataSource(filePath) }
+        duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
         setPlaybackMode()
+    }
+
+    fun setReRecordListener(callback: (() -> Unit)){
+        this.reRecordCallback = callback
     }
 
     private fun initProgressbar(max: Int, color: Int){
@@ -62,7 +77,7 @@ class Recorder constructor(context: Context, attributeSet: AttributeSet): Linear
         }
     }
 
-    private fun setRecordingMode(){
+    fun setRecordingMode(){
         initProgressbar(MAX_RECORDING_DURATION, ContextCompat.getColor(context, R.color.colorRecorderRed))
         widget_recorder_record_toggle.isChecked = false
         widget_recorder_record_toggle.visibility = View.VISIBLE
