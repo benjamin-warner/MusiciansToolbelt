@@ -56,6 +56,18 @@
             app:layout_constraintStart_toEndOf="@+id/relativeLayout"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/widget_recorder_timer"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="48sp"
+            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
+            app:layout_constraintEnd_toEndOf="@id/relativeLayout"
+            app:layout_constraintTop_toTopOf="@id/relativeLayout"
+            app:layout_constraintBottom_toBottomOf="@id/relativeLayout"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

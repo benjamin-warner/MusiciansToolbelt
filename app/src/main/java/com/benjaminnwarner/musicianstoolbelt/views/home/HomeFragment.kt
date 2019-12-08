@@ -21,7 +21,7 @@ class HomeFragment : Fragment() {
 
         root.home_recorder.setReRecordListener {
             val dialog = ConfirmationDialog.getInstance(getString(R.string.abandon_unsaved), getString(R.string.discard), getString(R.string.cancel)){
-                root.home_recorder.setRecordingMode()
+                root.home_recorder.reRecord()
             }
             dialog.show(fragmentManager!!, ConfirmationDialog.CONFIRM_DIALOG_TAG)
         }

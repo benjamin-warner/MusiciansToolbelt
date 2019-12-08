@@ -6,19 +6,22 @@ import android.graphics.PorterDuff
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.benjaminnwarner.musicianstoolbelt.R
+import com.benjaminnwarner.musicianstoolbelt.wrappers.CountDownWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaRecorderWrapper
 import kotlinx.android.synthetic.main.widget_recorder.view.*
-import java.lang.Exception
+import kotlin.math.ceil
 
 
 const val TEMP_RECORDING_FILENAME = "recording_temp.m4a"
-const val MAX_RECORDING_DURATION = 10000
+const val MAX_RECORDING_DURATION = 10000L
+const val PRE_ROLL_DURATION = 3000L
 
 class Recorder(context: Context, attributeSet: AttributeSet): LinearLayout(context, attributeSet) {
 
@@ -31,6 +34,7 @@ class Recorder(context: Context, attributeSet: AttributeSet): LinearLayout(conte
     private val filePath: String get() ="${context.filesDir.absolutePath}/${filename ?: TEMP_RECORDING_FILENAME}"
 
     private var reRecordCallback: (() -> Unit)? = null
+    private var preRoll: CountDownWrapper? = null
 
     init {
         inflate(context, R.layout.widget_recorder,this)
@@ -44,8 +48,10 @@ class Recorder(context: Context, attributeSet: AttributeSet): LinearLayout(conte
             setPlaybackMode()
         }
 
-        widget_recorder_playback_toggle.setOnCheckedChangeListener{ _, s -> onPlaybackToggle(s) }
-        widget_recorder_record_toggle.setOnCheckedChangeListener { _, s -> onRecordToggle(s) }
+        widget_recorder_timer.setOnClickListener { startPreRoll() }
+        widget_recorder_playback_toggle.setOnCheckedChangeListener{ _, active -> onPlaybackToggle(active) }
+        widget_recorder_record_toggle.setOnCheckedChangeListener { _, active -> onRecordToggle(active) }
+
         widget_recorder_re_record.setOnClickListener {
             if(reRecordCallback == null){
                 setRecordingMode()
@@ -66,41 +72,69 @@ class Recorder(context: Context, attributeSet: AttributeSet): LinearLayout(conte
         this.reRecordCallback = callback
     }
 
-    private fun initProgressbar(max: Int, color: Int){
+    private fun initProgressbar(duration: Long, color: Int){
         setProgressbarColor(color)
 
+        val max = duration.toInt()
         widget_recorder_progress.max = max
         widget_recorder_progress.progress = max
         animator = ObjectAnimator.ofInt(widget_recorder_progress,"progress", max, 0).apply {
-            duration = max.toLong()
+            this.duration = duration
             interpolator = LinearInterpolator()
         }
     }
 
-    fun setRecordingMode(){
+    fun reRecord() {
+        widget_recorder_timer.visibility = View.VISIBLE
+        setRecordingMode()
+    }
+
+    private fun setRecordingMode(){
         initProgressbar(MAX_RECORDING_DURATION, ContextCompat.getColor(context, R.color.colorRecorderRed))
         widget_recorder_record_toggle.isChecked = false
         widget_recorder_record_toggle.visibility = View.VISIBLE
         widget_recorder_playback_toggle.visibility = View.GONE
         widget_recorder_re_record.visibility = View.GONE
+        widget_recorder_timer.text = null
+        widget_recorder_timer.visibility = View.VISIBLE
     }
 
     private fun setPlaybackMode(){
-        initProgressbar(duration.toInt(), ContextCompat.getColor(context, R.color.colorPlayerBlue))
+        widget_recorder_timer.visibility = View.GONE
+        duration = MediaMetadataRetriever().apply { setDataSource(filePath) }.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong()
+        initProgressbar(duration, ContextCompat.getColor(context, R.color.colorPlayerBlue))
         widget_recorder_record_toggle.visibility = View.GONE
         widget_recorder_playback_toggle.visibility = View.VISIBLE
         widget_recorder_re_record.visibility = View.VISIBLE
+    }
+
+    private fun startPreRoll(){
+        if(preRoll == null) {
+            widget_recorder_timer.visibility = View.VISIBLE
+            widget_recorder_timer.text = (PRE_ROLL_DURATION / 1000).toString()
+            preRoll = CountDownWrapper(PRE_ROLL_DURATION, 1000, {
+                widget_recorder_record_toggle.isChecked = true
+                widget_recorder_timer.visibility = View.INVISIBLE
+                preRoll = null
+            }, {
+                Log.d("tick", (it / 1000F).toString())
+                widget_recorder_timer.text = ceil(it / 1000F).toInt().toString()
+            })
+            preRoll?.start()
+        } else {
+            widget_recorder_timer.text = null
+            preRoll?.cancel()
+            preRoll = null
+        }
     }
 
     private fun onRecordToggle(active: Boolean){
         if(active){
             recorder.recordTo(filePath)
             animator.start()
-            duration = System.currentTimeMillis()
         } else {
             animator.cancel()
             recorder.stop()
-            duration = System.currentTimeMillis() - duration
             setSourceFile(TEMP_RECORDING_FILENAME)
             setPlaybackMode()
         }
