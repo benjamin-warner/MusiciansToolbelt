@@ -37,6 +37,5 @@ class HomeFragment : Fragment() {
             setupWithAudioSource(file)
         }
         home_playback_recorder.addView(player)
-
     }
 }

@@ -10,7 +10,6 @@
     <color name="colorNearWhite">#C4C4C4</color>
     <color name="colorWhite">#FFFFFF</color>
 
-    <color name="colorRecorderRedShadow">#B71C1C</color>
     <color name="colorRecorderRed">#F44336</color>
     <color name="colorPlayerBlue">#1976D2</color>
 </resources>
