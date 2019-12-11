@@ -1,73 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="240dp"
+        android:layout_width="120dp"
         android:layout_height="120dp">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+        <ProgressBar
+            android:id="@+id/widget_recorder_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:max="100"
+            android:progress="100"
+            android:progressDrawable="@drawable/progress_recorder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ProgressBar
-                android:id="@+id/widget_recorder_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:indeterminate="false"
-                android:max="1000"
-                android:progress="1000"
-                android:progressDrawable="@drawable/progress_recorder" />
-
-            <ToggleButton
-                android:id="@+id/widget_recorder_record_toggle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/selector_recorder"
-                android:textOff=""
-                android:textOn="" />
-
-            <ToggleButton
-                android:id="@+id/widget_recorder_playback_toggle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/selector_player"
-                android:visibility="gone"
-                android:textOff=""
-                android:textOn="" />
-
-        </RelativeLayout>
-
-        <ImageButton
-            android:id="@+id/widget_recorder_re_record"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_recorder_re_record"
-            android:visibility="visible"
-            android:contentDescription="@string/re_record"
-            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+        <ToggleButton
+            android:id="@+id/widget_recorder_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_recorder"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/widget_recorder_timer"
+            android:id="@+id/widget_recorder_pre_roll"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:gravity="center"
+            android:elevation="2dp"
             android:textColor="@color/colorWhite"
             android:textSize="48sp"
-            app:layout_constraintStart_toStartOf="@+id/relativeLayout"
-            app:layout_constraintEnd_toEndOf="@id/relativeLayout"
-            app:layout_constraintTop_toTopOf="@id/relativeLayout"
-            app:layout_constraintBottom_toBottomOf="@id/relativeLayout"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </merge>

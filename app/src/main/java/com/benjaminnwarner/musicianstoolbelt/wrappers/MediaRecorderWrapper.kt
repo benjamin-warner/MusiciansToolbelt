@@ -45,7 +45,7 @@ class MediaRecorderWrapper {
         recorder = null
     }
 
-    fun setOnInterruptedListener(callback: (() -> Unit)){
+    fun setDurationLimitListener(callback: (() -> Unit)){
         onInterruptedListener = callback
     }
 }

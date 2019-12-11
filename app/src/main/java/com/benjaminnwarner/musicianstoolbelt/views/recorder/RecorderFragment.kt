@@ -44,7 +44,7 @@ class RecorderFragment : PermissionFragment(RecorderPermission) {
     }
 
     private fun setUpListeners(root: View) {
-        recorder.setOnInterruptedListener {
+        recorder.setDurationLimitListener {
             recorderViewModel.recording.value = false
             recorderViewModel.unsavedChanges.value = true
         }
