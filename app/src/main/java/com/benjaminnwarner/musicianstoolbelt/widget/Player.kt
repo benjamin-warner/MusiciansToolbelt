@@ -4,13 +4,13 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.view.animation.LinearInterpolator
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import kotlinx.android.synthetic.main.widget_player.view.*
 
 
-class Player(context: Context): LinearLayout(context) {
+class Player(context: Context): FrameLayout(context) {
 
     private val player = MediaPlayerWrapper()
     private lateinit var animator: ObjectAnimator

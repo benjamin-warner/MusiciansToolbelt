@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.wrappers.CountDownWrapper
 import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaRecorderWrapper
@@ -16,7 +16,7 @@ const val TEMP_RECORDING_FILENAME = "recording_temp.m4a"
 const val MAX_RECORDING_DURATION = 10000
 const val PRE_ROLL_DURATION = 3000L
 
-class Recorder(context: Context): LinearLayout(context) {
+class Recorder(context: Context): FrameLayout(context) {
 
     private val recorder = MediaRecorderWrapper()
     private lateinit var animator: ObjectAnimator
