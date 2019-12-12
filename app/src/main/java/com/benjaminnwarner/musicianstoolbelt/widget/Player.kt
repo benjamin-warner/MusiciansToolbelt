@@ -3,6 +3,7 @@ package com.benjaminnwarner.musicianstoolbelt.widget
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.media.MediaMetadataRetriever
+import android.util.AttributeSet
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import com.benjaminnwarner.musicianstoolbelt.R
@@ -10,7 +11,11 @@ import com.benjaminnwarner.musicianstoolbelt.wrappers.MediaPlayerWrapper
 import kotlinx.android.synthetic.main.widget_player.view.*
 
 
-class Player(context: Context): FrameLayout(context) {
+class Player: FrameLayout {
+
+    constructor(context: Context): super(context)
+    constructor(context: Context, attributes: AttributeSet): super(context, attributes)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val player = MediaPlayerWrapper()
     private lateinit var animator: ObjectAnimator

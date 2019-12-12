@@ -8,6 +8,8 @@ class MediaRecorderWrapper {
     private var recorder: MediaRecorder? = null
     private var onInterruptedListener: (() -> Unit)? = null
 
+    var maxDuration = -1
+
     fun recordTo(filePath: String) {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -15,7 +17,7 @@ class MediaRecorderWrapper {
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setAudioEncodingBitRate(128000)
             setAudioSamplingRate(44100)
-            setMaxDuration(10000)
+            setMaxDuration(maxDuration)
             setOutputFile(filePath)
             setOnInfoListener { _, what, _ -> onInfo(what) }
 
