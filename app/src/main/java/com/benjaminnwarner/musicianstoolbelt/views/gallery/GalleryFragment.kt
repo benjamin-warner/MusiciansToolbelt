@@ -27,7 +27,10 @@ class GalleryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
 
-        root.fab_new_recording.setOnClickListener { root.findNavController().navigate(R.id.nav_create_recording) }
+        root.fab_new_recording.setOnClickListener {
+            val action = GalleryFragmentDirections.navActionGalleryToRecording(-1)
+            findNavController().navigate(action)
+        }
 
         root.recorder_recycler_view.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -43,7 +46,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun onItemClicked(recording: Recording){
-        val action = GalleryFragmentDirections.navShowRecordingDetail(recording.id)
+        val action = GalleryFragmentDirections.navActionGalleryToRecording(recording.id)
         findNavController().navigate(action)
     }
 }

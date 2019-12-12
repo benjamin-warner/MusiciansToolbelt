@@ -1,29 +1,34 @@
 package com.benjaminnwarner.musicianstoolbelt.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
+import com.benjaminnwarner.musicianstoolbelt.util.RecorderConstants
 import kotlinx.coroutines.launch
+
 
 class RecordingViewModel(
     private val recordingRepository: RecordingRepository,
-    id: Long
-) : ViewModel() {
+    private val id: Long,
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val savedState = MutableLiveData<Boolean>().apply { value = false }
-    val saved: LiveData<Boolean> = savedState
+    private val recordingState = MutableLiveData<Recording>()
+    val recording: LiveData<Recording> = recordingState
 
-    val recording: LiveData<Recording> = recordingRepository.getRecording(id)
-
-    fun createRecordingRecord(filename: String) {
-        viewModelScope.launch {
-            val id = recordingRepository.saveRecording(Recording(filename = filename))
-            if(id != -1L){
-                savedState.value = true
+    init {
+        if(id == -1L) {
+            val defaultFilename = "${application.filesDir.absolutePath}/${RecorderConstants.DEFAULT_NEW_RECORDING_FILENAME}"
+            recordingState.value = Recording(id = id, filename = defaultFilename)
+        } else {
+            viewModelScope.launch {
+                recordingState.value = recordingRepository.getRecording(id)
             }
         }
+    }
+
+    fun update(filename: String) {
+
     }
 }

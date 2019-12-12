@@ -17,11 +17,14 @@
         android:label="@string/gallery"
         tools:layout="@layout/fragment_gallery" >
         <action
-            android:id="@+id/nav_create_recording"
-            app:destination="@id/nav_recorder" />
-        <action
-            android:id="@+id/nav_show_recording_detail"
-            app:destination="@+id/nav_recording_detail" />
+            android:id="@+id/nav_action_gallery_to_recording"
+            app:destination="@id/nav_recording" >
+            <argument
+                android:name="recordingId"
+                android:defaultValue="-1L" />
+            <argument android:defaultValue="-1L"
+                android:name="id" />
+        </action>
     </fragment>
 
     <fragment
@@ -31,20 +34,13 @@
         tools:layout="@layout/fragment_tools" />
 
     <fragment
-        android:id="@+id/nav_recorder"
-        android:name="com.benjaminnwarner.musicianstoolbelt.views.recorder.RecorderFragment"
-        android:label="@string/recorder"
-        tools:layout="@layout/fragment_recorder_old"/>
-
-    <fragment
-        android:id="@+id/nav_recording_detail"
-        android:name="com.benjaminnwarner.musicianstoolbelt.views.gallery.RecordingDetailFragment"
-        android:label="@string/recording_details"
-        tools:layout="@layout/fragment_recording_details" >
+        android:id="@+id/nav_recording"
+        android:name="com.benjaminnwarner.musicianstoolbelt.views.recording.RecordingFragment"
+        android:label="@string/recording"
+        tools:layout="@layout/fragment_recording">
         <argument
             android:name="id"
-            app:argType="long"
-            app:nullable="false"/>
+            app:argType="long" />
     </fragment>
 
 </navigation>

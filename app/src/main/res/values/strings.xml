@@ -25,4 +25,6 @@
     <string name="recording_details">Recording Details</string>
     <string name="re_record">Re-record</string>
     <string name="recordings">Recordings</string>
+    <string name="filename">Filename:</string>
+    <string name="recording">Recording</string>
 </resources>

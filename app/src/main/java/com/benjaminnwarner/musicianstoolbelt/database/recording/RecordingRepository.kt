@@ -2,9 +2,9 @@ package com.benjaminnwarner.musicianstoolbelt.database.recording
 
 class RecordingRepository private constructor(private val recordingDao: RecordingDao) {
 
-    fun getRecordings() = recordingDao.getRecordings()
+    suspend fun getRecordings() = recordingDao.getRecordings()
 
-    fun getRecording(id: Long) = recordingDao.getRecording(id)
+    suspend fun getRecording(id: Long) = recordingDao.getRecording(id)
 
     suspend fun saveRecording(recording: Recording) = recordingDao.insert(recording)
 
