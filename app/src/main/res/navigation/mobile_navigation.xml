@@ -22,7 +22,7 @@
             <argument
                 android:name="recordingId"
                 android:defaultValue="-1L" />
-            <argument android:defaultValue="-1L"
+            <argument android:defaultValue="0L"
                 android:name="id" />
         </action>
     </fragment>

@@ -28,7 +28,7 @@ class GalleryFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
 
         root.fab_new_recording.setOnClickListener {
-            val action = GalleryFragmentDirections.navActionGalleryToRecording(-1)
+            val action = GalleryFragmentDirections.navActionGalleryToRecording(id = 0)
             findNavController().navigate(action)
         }
 
@@ -46,7 +46,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun onItemClicked(recording: Recording){
-        val action = GalleryFragmentDirections.navActionGalleryToRecording(recording.id)
+        val action = GalleryFragmentDirections.navActionGalleryToRecording(id = recording.id)
         findNavController().navigate(action)
     }
 }

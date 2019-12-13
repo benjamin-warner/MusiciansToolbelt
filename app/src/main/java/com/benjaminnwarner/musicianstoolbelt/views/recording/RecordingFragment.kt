@@ -38,15 +38,15 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
                 setRecordingWrittenCallback(::recordingWritten)
             }
 
-            if(recording.id == -1L) {
+            if(recording.id == 0L) {
                 setRecord()
             } else {
                 setPlay()
             }
         })
 
-        root.fragment_recording_re_record.setOnClickListener{ setRecord() }
-        root.fragment_recording_save.setOnClickListener{ save() }
+        root.fragment_recording_re_record.setOnClickListener { setRecord() }
+        root.fragment_recording_save.setOnClickListener { recordingViewModel.update() }
 
         return root
     }
@@ -66,9 +66,5 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         fragment_recording_re_record.isEnabled = false
         fragment_recording_save.isEnabled = false
         fragment_recording_playback_recorder.setRecord()
-    }
-
-    private fun save(){
-
     }
 }
