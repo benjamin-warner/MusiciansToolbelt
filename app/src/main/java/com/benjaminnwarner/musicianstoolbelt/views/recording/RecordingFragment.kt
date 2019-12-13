@@ -46,7 +46,7 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         return root
     }
 
-    private fun initForNew() {
+    private fun initForNew(){
         fragment_recording_filename.text = "--"
         fragment_recording_playback_recorder.audioSource =
             "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
@@ -68,5 +68,4 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
     private fun onReRecord(){
         fragment_recording_playback_recorder.setRecord()
     }
-
 }

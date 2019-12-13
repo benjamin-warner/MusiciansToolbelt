@@ -22,6 +22,8 @@ class MediaPlayerWrapper {
     }
 
     fun stop() {
+        player?.stop()
+        player?.reset()
         player?.release()
         player = null
     }
