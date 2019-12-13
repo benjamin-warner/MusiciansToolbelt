@@ -13,34 +13,61 @@ class PlaybackRecorder: FrameLayout {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private var recorder: Recorder? = null
+    private var countdown: Countdown? = null
     private var player: Player? = null
+
+    private var recordingWrittenCallback: (() -> Unit)? = null
+    var audioSource: String = ""
+    var recordingMaxDuration = -1
+    var recordingPreRollDuration = -1L
 
     init {
         inflate(context, R.layout.widget_playback_recorder,this)
+    }
 
-        recorder = Recorder(context).apply {
-            onRecordingWritten(this@PlaybackRecorder::recordingWritten)
+    fun setRecordingWrittenCallback(callback: (() -> Unit)) {
+        recordingWrittenCallback = callback
+    }
+
+    fun setRecord(){
+        if(widget_playback_recorder_container.childCount != 0) {
+            widget_playback_recorder_container.removeAllViews()
+        }
+        recorder = Recorder(context). apply {
+            setRecordingDurationLimit(recordingMaxDuration)
+            audioSource = this@PlaybackRecorder.audioSource
+            onRecordingWritten(::setPlay)
         }
         widget_playback_recorder_container.addView(recorder)
+
+        if(recordingPreRollDuration != -1L){
+            initPreRoll()
+        }
     }
 
-    fun setAudioSource(file: String){
-        recorder?.filePath = file
+    private fun initPreRoll() {
+        countdown = Countdown(context).apply{
+            setCompletedListener(this@PlaybackRecorder::removePreRoll)
+            duration = recordingPreRollDuration
+        }
+        widget_playback_recorder_container.addView(countdown)
     }
 
-    fun setRecordingDurationLimit(duration: Int) {
-        recorder?.setRecordingDurationLimit(duration)
+    private fun removePreRoll(){
+        if(countdown != null) {
+            widget_playback_recorder_container.removeViewAt(1)
+            recorder?.record()
+        }
     }
 
-    fun setRecordingPreRollDuration(duration: Long) {
-        recorder?.setPreRollDuration(duration)
-    }
-
-    private fun recordingWritten(file: String){
-        widget_playback_recorder_container.removeAllViews()
+    fun setPlay() {
+        if(widget_playback_recorder_container.childCount != 0) {
+            widget_playback_recorder_container.removeAllViews()
+        }
         player = Player(context!!).apply {
-            setupWithAudioSource(file)
+            setupWithAudioSource(this@PlaybackRecorder.audioSource)
         }
         widget_playback_recorder_container.addView(player)
+        recordingWrittenCallback?.invoke()
     }
 }

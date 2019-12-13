@@ -28,17 +28,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/widget_recorder_pre_roll"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:elevation="2dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="48sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </merge>
