@@ -11,7 +11,5 @@ class RecordingListViewModel(
     recordingRepository: RecordingRepository
 ) : ViewModel() {
 
-    val recordings: LiveData<List<Recording>> =  liveData {
-        emit(recordingRepository.getRecordings())
-    }
+    val recordings: LiveData<List<Recording>> = recordingRepository.getRecordings()
 }

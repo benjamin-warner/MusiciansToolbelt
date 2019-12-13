@@ -1,11 +1,11 @@
 package com.benjaminnwarner.musicianstoolbelt.injectors
 
-import android.app.Application
 import android.content.Context
 import com.benjaminnwarner.musicianstoolbelt.database.AppDatabase
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
 import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingListViewModelFactory
 import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModelFactory
+import com.benjaminnwarner.musicianstoolbelt.wrappers.FileIOWrapper
 
 object RecordingRepositoryInjector {
 
@@ -16,10 +16,9 @@ object RecordingRepositoryInjector {
 
     fun provideRecordingViewModelFactory(
         context: Context,
-        id: Long,
-        application: Application
+        id: Long
     ): RecordingViewModelFactory {
-        return RecordingViewModelFactory(getRecordingRepository(context), id, application)
+        return RecordingViewModelFactory(getRecordingRepository(context), id, FileIOWrapper(context))
     }
 
     fun provideRecordingListViewModelFactory(
