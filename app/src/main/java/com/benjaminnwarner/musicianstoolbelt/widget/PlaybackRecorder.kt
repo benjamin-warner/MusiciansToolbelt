@@ -33,10 +33,14 @@ class PlaybackRecorder: FrameLayout {
         if(widget_playback_recorder_container.childCount != 0) {
             widget_playback_recorder_container.removeAllViews()
         }
-        recorder = Recorder(context). apply {
-            setRecordingDurationLimit(recordingMaxDuration)
-            audioSource = this@PlaybackRecorder.audioSource
-            onRecordingWritten(::setPlay)
+        if(recorder == null) {
+            recorder = Recorder(context).apply {
+                setRecordingDurationLimit(recordingMaxDuration)
+                audioSource = this@PlaybackRecorder.audioSource
+                onRecordingWritten(::setPlay)
+            }
+        } else {
+            recorder?.reset()
         }
         widget_playback_recorder_container.addView(recorder)
 
@@ -46,9 +50,11 @@ class PlaybackRecorder: FrameLayout {
     }
 
     private fun initPreRoll() {
-        countdown = Countdown(context).apply{
-            setCompletedListener(this@PlaybackRecorder::removePreRoll)
-            duration = recordingPreRollDuration
+        if(countdown == null) {
+            countdown = Countdown(context).apply{
+                setCompletedListener(this@PlaybackRecorder::removePreRoll)
+                duration = recordingPreRollDuration
+            }
         }
         widget_playback_recorder_container.addView(countdown)
     }
@@ -64,8 +70,12 @@ class PlaybackRecorder: FrameLayout {
         if(widget_playback_recorder_container.childCount != 0) {
             widget_playback_recorder_container.removeAllViews()
         }
-        player = Player(context!!).apply {
-            setupWithAudioSource(this@PlaybackRecorder.audioSource)
+        if(player == null) {
+            player = Player(context!!).apply {
+                setupWithAudioSource(this@PlaybackRecorder.audioSource)
+            }
+        } else {
+            player?.setupWithAudioSource(audioSource)
         }
         widget_playback_recorder_container.addView(player)
         recordingWrittenCallback?.invoke()

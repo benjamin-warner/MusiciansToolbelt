@@ -46,6 +46,7 @@ class Countdown: FrameLayout {
     }
 
     private fun completed(){
+        widget_countdown_display.text = null
         preRoll = null
         completionListener?.invoke()
     }

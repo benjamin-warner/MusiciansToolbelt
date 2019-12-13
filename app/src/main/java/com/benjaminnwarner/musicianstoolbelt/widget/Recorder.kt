@@ -30,10 +30,6 @@ class Recorder: FrameLayout {
         widget_recorder_toggle.setOnCheckedChangeListener { _, active -> onRecordToggle(active) }
     }
 
-    fun record(){
-        widget_recorder_toggle.isChecked = true
-    }
-
     fun onRecordingWritten(callback: (() -> Unit)){
         this.recordingWrittenCallback = callback
     }
@@ -41,6 +37,14 @@ class Recorder: FrameLayout {
     fun setRecordingDurationLimit(duration: Int){
         recorder.maxDuration = duration
         initProgressbar()
+    }
+
+    fun record(){
+        widget_recorder_toggle.isChecked = true
+    }
+
+    fun reset(){
+        widget_recorder_progress.progress = recorder.maxDuration
     }
 
     private fun initProgressbar(){
