@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
+import com.benjaminnwarner.musicianstoolbelt.util.TimeHelpers
 import com.benjaminnwarner.musicianstoolbelt.wrappers.FileIOWrapper
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -20,13 +21,11 @@ class RecordingViewModel(
     val recording: LiveData<Recording> = _recording
 
     init {
-        viewModelScope.launch {
-            val res = recordingRepository.getRecording(id)
-            @Suppress("SENSELESS_COMPARISON")
-            if(res == null){
-                _recording.postValue(Recording(0, Date(), "", ""))
-            } else {
-                _recording.postValue(res)
+        if(id == 0L){
+            _recording.postValue(Recording(0, Date(), "New Recording", ""))
+        } else {
+            viewModelScope.launch {
+                _recording.postValue(recordingRepository.getRecording(id))
             }
         }
     }
@@ -39,9 +38,13 @@ class RecordingViewModel(
         if(id == 0L){
             create()
         } else {
-            viewModelScope.launch {
-                recordingRepository.saveRecording(recording.value!!)
-            }
+            update()
+        }
+    }
+
+    private fun update(){
+        viewModelScope.launch {
+            recordingRepository.saveRecording(recording.value!!)
         }
     }
 

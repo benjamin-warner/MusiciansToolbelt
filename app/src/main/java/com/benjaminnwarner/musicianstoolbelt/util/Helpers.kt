@@ -20,12 +20,9 @@ object TimeHelpers {
         return SimpleDateFormat(ISO_8601).parse(iso)!!
     }
 
-    fun dateToFileTimestamp(date: Date){
-
-    }
-
-    fun toTimestampForFile(epoch: Long, locale: Locale): String {
-        val dateFormatter = SimpleDateFormat(FILE_TIMESTAMP, locale)
+    @SuppressLint("SimpleDateFormat")
+    fun unixToFileTimestamp(epoch: Long): String {
+        val dateFormatter = SimpleDateFormat(FILE_TIMESTAMP)
         val date = Date(epoch)
         return dateFormatter.format(date)
     }

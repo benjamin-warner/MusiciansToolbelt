@@ -10,7 +10,7 @@ interface RecordingDao {
     fun getRecordings(): LiveData<List<Recording>>
 
     @Query("SELECT * FROM recordings WHERE id = :id")
-    suspend fun getRecording(id: Long): Recording
+    suspend fun getRecording(id: Long): Recording?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recording: Recording): Long
