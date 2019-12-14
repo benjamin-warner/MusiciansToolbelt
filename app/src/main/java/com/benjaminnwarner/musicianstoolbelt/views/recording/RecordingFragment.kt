@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -33,7 +34,8 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         }
 
         recordingViewModel.recording.observe(this, Observer { recording ->
-            if(recording == null){
+            root.fragment_recording_name_input.setText(recording.name)
+            if(recording.id == 0L){
                 initForNew()
             } else {
                 initForExisting(recording)
@@ -41,13 +43,17 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         })
 
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
-        root.fragment_recording_save.setOnClickListener { recordingViewModel.save() }
+        root.fragment_recording_save.setOnClickListener { save() }
 
         return root
     }
 
-    private fun initForNew(){
-        fragment_recording_filename.text = "--"
+    private fun save() {
+        recordingViewModel.setName(fragment_recording_name_input.text.toString())
+        recordingViewModel.save()
+    }
+
+    private fun initForNew() {
         fragment_recording_playback_recorder.audioSource =
             "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
         fragment_recording_playback_recorder.setRecord()
@@ -55,7 +61,6 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
     private fun initForExisting(recording: Recording){
         fragment_recording_re_record.isEnabled = true
-        fragment_recording_filename.text = recording.filename
         fragment_recording_playback_recorder.audioSource = recording.filename
         fragment_recording_playback_recorder.setPlay()
     }

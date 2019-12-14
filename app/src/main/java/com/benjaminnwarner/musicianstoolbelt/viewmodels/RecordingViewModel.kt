@@ -1,8 +1,6 @@
 package com.benjaminnwarner.musicianstoolbelt.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
@@ -18,11 +16,32 @@ class RecordingViewModel(
     private val fileWriter: FileIOWrapper
 ) : ViewModel() {
 
-    val recording: LiveData<Recording> = recordingRepository.getRecording(id)
+    private val _recording = MutableLiveData<Recording>()
+    val recording: LiveData<Recording> = _recording
+
+    init {
+        viewModelScope.launch {
+            val res = recordingRepository.getRecording(id)
+            @Suppress("SENSELESS_COMPARISON")
+            if(res == null){
+                _recording.postValue(Recording(0, Date(), "", ""))
+            } else {
+                _recording.postValue(res)
+            }
+        }
+    }
+
+    fun setName(name: String){
+        _recording.postValue(_recording.value?.copy(name = name))
+    }
 
     fun save(){
         if(id == 0L){
             create()
+        } else {
+            viewModelScope.launch {
+                recordingRepository.saveRecording(recording.value!!)
+            }
         }
     }
 
@@ -32,8 +51,8 @@ class RecordingViewModel(
                 val persistentFilename =
                     fileWriter.renameAsTimestamp(RecordingConstants.DEFAULT_NEW_RECORDING_FILE,
                         RecordingConstants.DEFAULT_RECORDING_EXTENSION)
-                val recording = Recording(id, Date(), persistentFilename)
-                recordingRepository.saveRecording(recording)
+                val toSave = _recording.value!!.copy(filename = persistentFilename)
+                recordingRepository.saveRecording(toSave)
             } catch (e: IOException){
 
             }
