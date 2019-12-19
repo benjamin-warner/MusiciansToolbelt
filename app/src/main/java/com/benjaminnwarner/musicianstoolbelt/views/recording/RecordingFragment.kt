@@ -2,12 +2,10 @@ package com.benjaminnwarner.musicianstoolbelt.views.recording
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
@@ -47,7 +45,7 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
             }
         }
 
-        recordingViewModel.unsavedChanges.observe(this) { unsavedChanges ->
+        recordingViewModel.recordingPresent.observe(this) { unsavedChanges ->
             root.fragment_recording_save.isEnabled = unsavedChanges
         }
 

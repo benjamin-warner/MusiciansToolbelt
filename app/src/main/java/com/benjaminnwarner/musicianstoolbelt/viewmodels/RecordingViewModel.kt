@@ -20,32 +20,23 @@ class RecordingViewModel(
 
     private val _recording = MutableLiveData<Recording>()
     val recording: LiveData<Recording> = _recording
-    private lateinit var initialState: Recording
+    val recordingPresent = MutableLiveData<Boolean>(false)
+    private var recordingDirty = false
 
     private val filesDir = "${application.filesDir.absolutePath}/"
     private val tempRecordingPath = filesDir + RecordingConstants.DEFAULT_NEW_RECORDING_FILE
-
-    private var recordingDirty = false
-    val unsavedChanges = MediatorLiveData<Boolean>()
 
     init {
         viewModelScope.launch {
             if (id == 0L) {
                 val filename = filesDir + TimeHelpers.unixToFileTimestamp(System.currentTimeMillis()) +
                         RecordingConstants.DEFAULT_RECORDING_EXTENSION
-                initialState = Recording(id, Date(), "New Recording", filename)
-                _recording.postValue(initialState)
+                val initial = Recording(id, Date(), "New Recording", filename)
+                _recording.postValue(initial)
             } else {
-                initialState = recordingRepository.getRecording(id)!!
-                _recording.postValue(initialState)
-            }
-        }
-
-        unsavedChanges.addSource(_recording){
-            if(id == 0L){
-                recordingDirty
-            } else {
-                recordingDirty || it != initialState
+                val initial = recordingRepository.getRecording(id)!!
+                _recording.postValue(initial)
+                recordingPresent.postValue(true)
             }
         }
     }
@@ -56,6 +47,7 @@ class RecordingViewModel(
 
     fun setRecordingDirty(){
         recordingDirty = true
+        recordingPresent.postValue(true)
     }
 
     fun save() = viewModelScope.launch {
