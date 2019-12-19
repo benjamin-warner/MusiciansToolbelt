@@ -1,15 +1,15 @@
 package com.benjaminnwarner.musicianstoolbelt.views.recording
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
 import com.benjaminnwarner.musicianstoolbelt.R
-import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.injectors.RecordingRepositoryInjector
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
 import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModel
@@ -21,7 +21,7 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
     private val args: RecordingFragmentArgs by navArgs()
     private val recordingViewModel: RecordingViewModel by viewModels {
-        RecordingRepositoryInjector.provideRecordingViewModelFactory(requireActivity(), args.id)
+        RecordingRepositoryInjector.provideRecordingViewModelFactory(requireActivity(), args.id, requireActivity().application)
     }
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,17 +30,20 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         root.fragment_recording_playback_recorder.apply {
             recordingMaxDuration = RecordingConstants.DEFAULT_RECORDING_DURATION_LIMIT
             //recordingPreRollDuration = RecordingConstants.DEFAULT_PRE_ROLL_DURATION
-            setRecordingWrittenCallback(::recordingWritten)
+            setRecordingWrittenCallback(this@RecordingFragment::onRecordingWritten)
         }
 
-        recordingViewModel.recording.observe(this, Observer { recording ->
+        recordingViewModel.recording.observe(this) { recording ->
             root.fragment_recording_name_input.setText(recording.name)
+            root.fragment_recording_playback_recorder.audioSource = recording.filename
+
             if(recording.id == 0L){
-                initForNew()
+                fragment_recording_playback_recorder.setRecord()
             } else {
-                initForExisting(recording)
+                fragment_recording_re_record.isEnabled = true
+                fragment_recording_playback_recorder.setPlay()
             }
-        })
+        }
 
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
         root.fragment_recording_save.setOnClickListener { save() }
@@ -49,23 +52,20 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
     }
 
     private fun save() {
+        view?.clearFocus()
+        hideKeyboard()
         recordingViewModel.setName(fragment_recording_name_input.text.toString())
         recordingViewModel.save()
     }
 
-    private fun initForNew() {
-        fragment_recording_playback_recorder.audioSource =
-            "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
-        fragment_recording_playback_recorder.setRecord()
+    private fun hideKeyboard(){
+        view?.let {
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
-    private fun initForExisting(recording: Recording){
-        fragment_recording_re_record.isEnabled = true
-        fragment_recording_playback_recorder.audioSource = recording.filename
-        fragment_recording_playback_recorder.setPlay()
-    }
-
-    private fun recordingWritten(){
+    private fun onRecordingWritten(){
         fragment_recording_re_record.isEnabled = true
         fragment_recording_save.isEnabled = true
     }

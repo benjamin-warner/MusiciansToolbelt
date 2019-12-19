@@ -1,12 +1,13 @@
 package com.benjaminnwarner.musicianstoolbelt.viewmodels
 
+import android.app.Application
 import androidx.lifecycle.*
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
 import com.benjaminnwarner.musicianstoolbelt.util.TimeHelpers
-import com.benjaminnwarner.musicianstoolbelt.wrappers.FileIOWrapper
 import kotlinx.coroutines.launch
+import java.io.File
 import java.io.IOException
 import java.util.*
 
@@ -14,17 +15,19 @@ import java.util.*
 class RecordingViewModel(
     private val recordingRepository: RecordingRepository,
     private val id: Long,
-    private val fileWriter: FileIOWrapper
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _recording = MutableLiveData<Recording>()
     val recording: LiveData<Recording> = _recording
 
     init {
-        if(id == 0L){
-            _recording.postValue(Recording(0, Date(), "New Recording", ""))
-        } else {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (id == 0L) {
+                val filename =
+                    "${application.filesDir.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
+                _recording.postValue(Recording(id, Date(), "New Recording", filename))
+            } else {
                 _recording.postValue(recordingRepository.getRecording(id))
             }
         }
@@ -34,12 +37,9 @@ class RecordingViewModel(
         _recording.postValue(_recording.value?.copy(name = name))
     }
 
-    fun save(){
-        if(id == 0L){
-            create()
-        } else {
-            update()
-        }
+    fun save() = when(id) {
+        0L -> create()
+        else -> update()
     }
 
     private fun update(){
@@ -51,11 +51,13 @@ class RecordingViewModel(
     private fun create() {
         viewModelScope.launch {
             try {
-                val persistentFilename =
-                    fileWriter.renameAsTimestamp(RecordingConstants.DEFAULT_NEW_RECORDING_FILE,
-                        RecordingConstants.DEFAULT_RECORDING_EXTENSION)
-                val toSave = _recording.value!!.copy(filename = persistentFilename)
-                recordingRepository.saveRecording(toSave)
+                val fromFile = File(_recording.value!!.filename)
+                val persistentFileName =
+                    "${getApplication<Application>().filesDir.absolutePath}/" +
+                    TimeHelpers.unixToFileTimestamp(fromFile.lastModified())
+                val toFile = File(persistentFileName)
+                fromFile.renameTo(toFile)
+                recordingRepository.saveRecording(_recording.value!!.copy(filename = persistentFileName))
             } catch (e: IOException){
 
             }
