@@ -37,7 +37,7 @@ class PlaybackRecorder: FrameLayout {
             recorder = Recorder(context).apply {
                 setRecordingDurationLimit(recordingMaxDuration)
                 audioSource = this@PlaybackRecorder.audioSource
-                onRecordingWritten(::setPlay)
+                onRecordingWritten(this@PlaybackRecorder::onRecordingWritten)
             }
         } else {
             recorder?.reset()
@@ -47,6 +47,11 @@ class PlaybackRecorder: FrameLayout {
         if(recordingPreRollDuration != -1L){
             initPreRoll()
         }
+    }
+
+    private fun onRecordingWritten(){
+        recordingWrittenCallback?.invoke()
+        setPlay()
     }
 
     private fun initPreRoll() {
@@ -78,6 +83,5 @@ class PlaybackRecorder: FrameLayout {
             player?.setupWithAudioSource(audioSource)
         }
         widget_playback_recorder_container.addView(player)
-        recordingWrittenCallback?.invoke()
     }
 }

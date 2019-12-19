@@ -20,15 +20,32 @@ class RecordingViewModel(
 
     private val _recording = MutableLiveData<Recording>()
     val recording: LiveData<Recording> = _recording
+    private lateinit var initialState: Recording
+
+    private val filesDir = "${application.filesDir.absolutePath}/"
+    private val tempRecordingPath = filesDir + RecordingConstants.DEFAULT_NEW_RECORDING_FILE
+
+    private var recordingDirty = false
+    val unsavedChanges = MediatorLiveData<Boolean>()
 
     init {
         viewModelScope.launch {
             if (id == 0L) {
-                val filename =
-                    "${application.filesDir.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
-                _recording.postValue(Recording(id, Date(), "New Recording", filename))
+                val filename = filesDir + TimeHelpers.unixToFileTimestamp(System.currentTimeMillis()) +
+                        RecordingConstants.DEFAULT_RECORDING_EXTENSION
+                initialState = Recording(id, Date(), "New Recording", filename)
+                _recording.postValue(initialState)
             } else {
-                _recording.postValue(recordingRepository.getRecording(id))
+                initialState = recordingRepository.getRecording(id)!!
+                _recording.postValue(initialState)
+            }
+        }
+
+        unsavedChanges.addSource(_recording){
+            if(id == 0L){
+                recordingDirty
+            } else {
+                recordingDirty || it != initialState
             }
         }
     }
@@ -37,30 +54,22 @@ class RecordingViewModel(
         _recording.postValue(_recording.value?.copy(name = name))
     }
 
-    fun save() = when(id) {
-        0L -> create()
-        else -> update()
+    fun setRecordingDirty(){
+        recordingDirty = true
     }
 
-    private fun update(){
-        viewModelScope.launch {
-            recordingRepository.saveRecording(recording.value!!)
+    fun save() = viewModelScope.launch {
+        if(recordingDirty) {
+            updateRecording()
         }
+        recordingRepository.saveRecording(_recording.value!!)
     }
 
-    private fun create() {
-        viewModelScope.launch {
-            try {
-                val fromFile = File(_recording.value!!.filename)
-                val persistentFileName =
-                    "${getApplication<Application>().filesDir.absolutePath}/" +
-                    TimeHelpers.unixToFileTimestamp(fromFile.lastModified())
-                val toFile = File(persistentFileName)
-                fromFile.renameTo(toFile)
-                recordingRepository.saveRecording(_recording.value!!.copy(filename = persistentFileName))
-            } catch (e: IOException){
-
-            }
-        }
+    private fun updateRecording(){
+        try {
+            val fromFile = File(tempRecordingPath)
+            val persistentFile = File(_recording.value!!.filename)
+            fromFile.renameTo(persistentFile)
+        } catch(e: IOException){}
     }
 }

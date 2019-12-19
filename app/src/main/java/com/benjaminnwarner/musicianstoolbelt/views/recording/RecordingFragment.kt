@@ -2,10 +2,12 @@ package com.benjaminnwarner.musicianstoolbelt.views.recording
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
@@ -45,6 +47,10 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
             }
         }
 
+        recordingViewModel.unsavedChanges.observe(this) { unsavedChanges ->
+            root.fragment_recording_save.isEnabled = unsavedChanges
+        }
+
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
         root.fragment_recording_save.setOnClickListener { save() }
 
@@ -68,9 +74,12 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
     private fun onRecordingWritten(){
         fragment_recording_re_record.isEnabled = true
         fragment_recording_save.isEnabled = true
+        recordingViewModel.setRecordingDirty()
     }
 
     private fun onReRecord(){
+        fragment_recording_playback_recorder.audioSource =
+            "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
         fragment_recording_playback_recorder.setRecord()
     }
 }
