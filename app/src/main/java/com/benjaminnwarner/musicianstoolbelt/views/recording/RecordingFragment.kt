@@ -35,13 +35,15 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
         recordingViewModel.recording.observe(this) { recording ->
             root.fragment_recording_name_input.setText(recording.name)
-            root.fragment_recording_playback_recorder.audioSource = recording.filename
 
             if(recording.id == 0L){
-                fragment_recording_playback_recorder.setRecord()
+                root.fragment_recording_playback_recorder.audioSource =
+                    "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
+                root.fragment_recording_playback_recorder.setRecord()
             } else {
-                fragment_recording_re_record.isEnabled = true
-                fragment_recording_playback_recorder.setPlay()
+                root.fragment_recording_playback_recorder.audioSource = recording.filename
+                root.fragment_recording_re_record.isEnabled = true
+                root.fragment_recording_playback_recorder.setPlay()
             }
         }
 
