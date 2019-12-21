@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.navArgs
@@ -24,7 +27,18 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         RecordingRepositoryInjector.provideRecordingViewModelFactory(requireActivity(), args.id, requireActivity().application)
     }
 
-    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
+    private lateinit var callback: OnBackPressedCallback
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        callback = dispatcher.addCallback(this){
+            callback.isEnabled = false
+            dispatcher.onBackPressed()
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = layoutInflater.inflate(R.layout.fragment_recording, container, false)
 
         root.fragment_recording_playback_recorder.apply {
@@ -47,8 +61,12 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
             }
         }
 
-        recordingViewModel.recordingPresent.observe(this) { unsavedChanges ->
+        recordingViewModel.unsavedChanges.observe(this) { unsavedChanges ->
             root.fragment_recording_save.isEnabled = unsavedChanges
+        }
+
+        root.fragment_recording_name_input.doAfterTextChanged {
+            recordingViewModel.setName(it.toString())
         }
 
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
