@@ -1,11 +1,9 @@
 package com.benjaminnwarner.musicianstoolbelt.views.recording
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
@@ -70,23 +68,9 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         }
 
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
-        root.fragment_recording_save.setOnClickListener { save() }
+        root.fragment_recording_save.setOnClickListener { recordingViewModel.save() }
 
         return root
-    }
-
-    private fun save() {
-        view?.clearFocus()
-        hideKeyboard()
-        recordingViewModel.setName(fragment_recording_name_input.text.toString())
-        recordingViewModel.save()
-    }
-
-    private fun hideKeyboard(){
-        view?.let {
-            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(it.windowToken, 0)
-        }
     }
 
     private fun onRecordingWritten(){
