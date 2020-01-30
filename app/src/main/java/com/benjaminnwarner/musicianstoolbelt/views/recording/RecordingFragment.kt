@@ -41,7 +41,7 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
         root.fragment_recording_playback_recorder.apply {
             recordingMaxDuration = RecordingConstants.DEFAULT_RECORDING_DURATION_LIMIT
-            //recordingPreRollDuration = RecordingConstants.DEFAULT_PRE_ROLL_DURATION
+            recordingPreRollDuration = RecordingConstants.DEFAULT_PRE_ROLL_DURATION
             setRecordingWrittenCallback(this@RecordingFragment::onRecordingWritten)
         }
 

@@ -36,7 +36,7 @@ class Recorder: FrameLayout {
 
     fun setRecordingDurationLimit(duration: Int){
         recorder.maxDuration = duration
-        initProgressbar()
+        if(recorder.maxDuration != -1) initProgressbar()
     }
 
     fun record(){
@@ -60,9 +60,9 @@ class Recorder: FrameLayout {
         if(active){
             if(audioSource == "") throw IllegalStateException("No audio source set; set via prop filePath.")
             recorder.recordTo(audioSource)
-            animator?.start()
+            if(recorder.maxDuration != -1) animator?.start()
         } else {
-            animator?.cancel()
+            if(recorder.maxDuration != -1) animator?.cancel()
             recorder.stop()
             recordingWrittenCallback?.invoke()
         }
