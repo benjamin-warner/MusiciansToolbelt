@@ -1,6 +1,9 @@
 package com.benjaminnwarner.musicianstoolbelt.views.recording
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +20,18 @@ import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModel
 import com.benjaminnwarner.musicianstoolbelt.views.permissions.PermissionFragment
 import kotlinx.android.synthetic.main.fragment_recording.*
 import kotlinx.android.synthetic.main.fragment_recording.view.*
+import java.io.File
+import java.io.FileOutputStream
 
-class RecordingFragment: PermissionFragment(RecordingPermission){
+class RecordingFragment: PermissionFragment(RecordingPermission) {
 
     private val args: RecordingFragmentArgs by navArgs()
     private val recordingViewModel: RecordingViewModel by viewModels {
-        RecordingRepositoryInjector.provideRecordingViewModelFactory(requireActivity(), args.id, requireActivity().application)
+        RecordingRepositoryInjector.provideRecordingViewModelFactory(
+            requireActivity(),
+            args.id,
+            requireActivity().application
+        )
     }
 
     private val dispatcher by lazy { requireActivity().onBackPressedDispatcher }
@@ -30,13 +39,17 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        callback = dispatcher.addCallback(this){
+        callback = dispatcher.addCallback(this) {
             callback.isEnabled = false
             dispatcher.onBackPressed()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val root = layoutInflater.inflate(R.layout.fragment_recording, container, false)
 
         root.fragment_recording_playback_recorder.apply {
@@ -48,7 +61,7 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
         recordingViewModel.recording.observe(this) { recording ->
             root.fragment_recording_name_input.setText(recording.name)
 
-            if(recording.id == 0L){
+            if (recording.id == 0L) {
                 root.fragment_recording_playback_recorder.audioSource =
                     "${context?.filesDir?.absolutePath}/${RecordingConstants.DEFAULT_NEW_RECORDING_FILE}"
                 root.fragment_recording_playback_recorder.setRecord()
@@ -69,11 +82,12 @@ class RecordingFragment: PermissionFragment(RecordingPermission){
 
         root.fragment_recording_re_record.setOnClickListener { onReRecord() }
         root.fragment_recording_save.setOnClickListener { recordingViewModel.save() }
+        root.fragment_recording_backup.setOnClickListener { recordingViewModel.backup() }
 
         return root
     }
 
-    private fun onRecordingWritten(){
+    private fun onRecordingWritten() {
         fragment_recording_re_record.isEnabled = true
         fragment_recording_save.isEnabled = true
         recordingViewModel.setRecordingDirty()

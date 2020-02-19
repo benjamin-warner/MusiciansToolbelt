@@ -15,7 +15,7 @@ class MediaRecorderWrapper {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setAudioEncodingBitRate(128000)
+            setAudioEncodingBitRate(64000)
             setAudioSamplingRate(44100)
             setMaxDuration(maxDuration)
             setOutputFile(filePath)

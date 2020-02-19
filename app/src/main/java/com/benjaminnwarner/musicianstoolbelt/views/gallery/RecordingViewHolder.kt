@@ -23,7 +23,7 @@ class RecordingViewHolder(
 
     fun bind(recording: Recording) {
         id?.text = recording.id.toString()
-        filename?.text = recording.filename
+        filename?.text = recording.name
 
         itemView.setOnClickListener{
             itemClickCallback.invoke(recording)
