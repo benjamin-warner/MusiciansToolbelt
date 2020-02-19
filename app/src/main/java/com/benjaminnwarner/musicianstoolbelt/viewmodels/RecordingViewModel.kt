@@ -1,16 +1,14 @@
 package com.benjaminnwarner.musicianstoolbelt.viewmodels
 
 import android.app.Application
-import android.content.ContentValues
-import android.provider.MediaStore
+import android.content.Intent
 import androidx.lifecycle.*
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
 import com.benjaminnwarner.musicianstoolbelt.util.TimeHelpers
-import kotlinx.coroutines.Dispatchers
+import com.benjaminnwarner.musicianstoolbelt.wrappers.AudioBackupService
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -71,33 +69,10 @@ class RecordingViewModel(
     }
 
     fun backup() {
-        val resolver = (getApplication() as Application).applicationContext.contentResolver
-
-        val downloadsUri = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL)
-        val details = ContentValues().apply {
-            put(MediaStore.Audio.Media.DISPLAY_NAME, "${mutableRecording.value!!.name}.m4a")
-            put(MediaStore.Audio.Media.MIME_TYPE, "audio/mp4")
-            put(MediaStore.Audio.Media.IS_PENDING, 1)
+        Intent((getApplication() as Application).applicationContext, AudioBackupService::class.java).also {
+            it.putExtra("filename", mutableRecording.value!!.filename)
+            (getApplication() as Application).startService(it)
         }
-
-        val backupUri = resolver?.insert(downloadsUri, details)
-
-        viewModelScope.launch {
-            val fIn = File(mutableRecording.value!!.filename).inputStream()
-            val fOut = resolver?.openOutputStream(backupUri!!, "w")
-            try {
-                fIn.copyTo(fOut!!)
-            } finally {
-                withContext(Dispatchers.IO) {
-                    fIn.close()
-                    fOut?.close()
-                }
-            }
-        }
-
-        details.clear()
-        details.put(MediaStore.Audio.Media.IS_PENDING, 0)
-        resolver?.update(backupUri!!, details, null, null)
     }
 
     private fun updateRecording(){

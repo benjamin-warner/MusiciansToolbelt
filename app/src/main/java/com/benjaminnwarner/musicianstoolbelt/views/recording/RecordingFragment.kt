@@ -1,9 +1,6 @@
 package com.benjaminnwarner.musicianstoolbelt.views.recording
 
-import android.content.ContentValues
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,8 +17,6 @@ import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModel
 import com.benjaminnwarner.musicianstoolbelt.views.permissions.PermissionFragment
 import kotlinx.android.synthetic.main.fragment_recording.*
 import kotlinx.android.synthetic.main.fragment_recording.view.*
-import java.io.File
-import java.io.FileOutputStream
 
 class RecordingFragment: PermissionFragment(RecordingPermission) {
 
