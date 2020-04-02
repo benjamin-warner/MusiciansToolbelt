@@ -25,7 +25,10 @@ class Recorder: FrameLayout {
     init {
         inflate(context, R.layout.widget_recorder,this)
 
-        recorder.setDurationLimitListener(this::onDurationLimitHit)
+
+        if(recorder.maxDuration != -1) {
+            recorder.setDurationLimitListener(this::onDurationLimitHit)
+        }
 
         widget_recorder_toggle.setOnCheckedChangeListener { _, active -> onRecordToggle(active) }
     }
@@ -44,15 +47,21 @@ class Recorder: FrameLayout {
     }
 
     fun reset(){
-        widget_recorder_progress.progress = recorder.maxDuration
+        if(recorder.maxDuration != -1) {
+            widget_recorder_progress.progress = recorder.maxDuration
+        }
     }
 
     private fun initProgressbar(){
         widget_recorder_progress.max = recorder.maxDuration
         widget_recorder_progress.progress = recorder.maxDuration
-        animator = ObjectAnimator.ofInt(widget_recorder_progress, "progress", recorder.maxDuration, 0).apply {
-            this.duration = recorder.maxDuration.toLong()
-            interpolator = LinearInterpolator()
+        if(recorder.maxDuration != -1) {
+            animator =
+                ObjectAnimator.ofInt(widget_recorder_progress, "progress", recorder.maxDuration, 0)
+                    .apply {
+                        this.duration = recorder.maxDuration.toLong()
+                        interpolator = LinearInterpolator()
+                    }
         }
     }
 
