@@ -17,7 +17,7 @@ class Recorder: FrameLayout {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val recorder = MediaRecorderWrapper()
-    private var animator: ObjectAnimator? = null
+    private val animator: ObjectAnimator
 
     var audioSource: String = ""
     private var recordingWrittenCallback: (() -> Unit)? = null
@@ -25,10 +25,16 @@ class Recorder: FrameLayout {
     init {
         inflate(context, R.layout.widget_recorder,this)
 
+        val duration = if(recorder.maxDuration != -1) recorder.maxDuration else 100
+        val downTo = if(recorder.maxDuration != -1) 0 else 100
 
-        if(recorder.maxDuration != -1) {
-            recorder.setDurationLimitListener(this::onDurationLimitHit)
-        }
+        animator = ObjectAnimator.ofInt(widget_recorder_progress, "progress", duration, downTo)
+            .apply {
+                this.duration = duration.toLong()
+                interpolator = LinearInterpolator()
+            }
+
+        recorder.setDurationLimitListener(this::onDurationLimitHit)
 
         widget_recorder_toggle.setOnCheckedChangeListener { _, active -> onRecordToggle(active) }
     }
@@ -47,38 +53,28 @@ class Recorder: FrameLayout {
     }
 
     fun reset(){
-        if(recorder.maxDuration != -1) {
-            widget_recorder_progress.progress = recorder.maxDuration
-        }
+        widget_recorder_progress.progress = recorder.maxDuration
     }
 
     private fun initProgressbar(){
         widget_recorder_progress.max = recorder.maxDuration
         widget_recorder_progress.progress = recorder.maxDuration
-        if(recorder.maxDuration != -1) {
-            animator =
-                ObjectAnimator.ofInt(widget_recorder_progress, "progress", recorder.maxDuration, 0)
-                    .apply {
-                        this.duration = recorder.maxDuration.toLong()
-                        interpolator = LinearInterpolator()
-                    }
-        }
     }
 
     private fun onRecordToggle(active: Boolean){
         if(active){
             if(audioSource == "") throw IllegalStateException("No audio source set; set via prop filePath.")
             recorder.recordTo(audioSource)
-            if(recorder.maxDuration != -1) animator?.start()
+            animator.start()
         } else {
-            if(recorder.maxDuration != -1) animator?.cancel()
+            animator.cancel()
             recorder.stop()
             recordingWrittenCallback?.invoke()
         }
     }
 
     private fun onDurationLimitHit(){
-        animator?.cancel()
+        animator.cancel()
         recordingWrittenCallback?.invoke()
     }
 }

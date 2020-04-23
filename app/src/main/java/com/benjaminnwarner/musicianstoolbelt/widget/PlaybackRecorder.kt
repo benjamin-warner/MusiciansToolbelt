@@ -40,7 +40,9 @@ class PlaybackRecorder: FrameLayout {
                 onRecordingWritten(this@PlaybackRecorder::onRecordingWritten)
             }
         } else {
-            recorder?.reset()
+            if(recordingMaxDuration != -1) {
+                recorder?.reset()
+            }
         }
         widget_playback_recorder_container.addView(recorder)
 

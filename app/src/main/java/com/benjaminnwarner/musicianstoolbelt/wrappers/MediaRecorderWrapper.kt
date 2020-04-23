@@ -2,13 +2,14 @@ package com.benjaminnwarner.musicianstoolbelt.wrappers
 
 import android.media.MediaRecorder
 import android.util.Log
+import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
 import java.io.IOException
 
 class MediaRecorderWrapper {
     private var recorder: MediaRecorder? = null
     private var onInterruptedListener: (() -> Unit)? = null
 
-    var maxDuration = -1
+    var maxDuration = RecordingConstants.DEFAULT_RECORDING_DURATION_LIMIT
 
     fun recordTo(filePath: String) {
         recorder = MediaRecorder().apply {
