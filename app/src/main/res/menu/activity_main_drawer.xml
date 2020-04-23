@@ -9,7 +9,11 @@
             android:icon="@drawable/ic_home"
             android:title="@string/home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_songs_index"
+            android:icon="@drawable/ic_songs"
+            android:title="@string/songs" />
+        <item
+            android:id="@+id/nav_recordings_index"
             android:icon="@drawable/ic_recordings"
             android:title="@string/recordings" />
         <item

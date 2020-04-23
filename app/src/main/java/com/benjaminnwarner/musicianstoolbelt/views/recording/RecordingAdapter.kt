@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.views.gallery
+package com.benjaminnwarner.musicianstoolbelt.views.recording
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,11 @@ class RecordingAdapter(private val list: List<Recording>, private val itemClickC
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordingViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return RecordingViewHolder(inflater, parent, itemClickCallback)
+        return RecordingViewHolder(
+            inflater,
+            parent,
+            itemClickCallback
+        )
     }
 
     override fun onBindViewHolder(holder: RecordingViewHolder, position: Int) {

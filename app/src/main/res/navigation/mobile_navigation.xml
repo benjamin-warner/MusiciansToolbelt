@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_recorder_permission_denied"
-    app:startDestination="@+id/nav_gallery">
+    app:startDestination="@+id/nav_recordings_index">
 
     <fragment
         android:id="@+id/nav_home"
@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.benjaminnwarner.musicianstoolbelt.views.gallery.GalleryFragment"
+        android:id="@+id/nav_recordings_index"
+        android:name="com.benjaminnwarner.musicianstoolbelt.views.recording.RecordingsIndexFragment"
         android:label="@string/gallery"
-        tools:layout="@layout/fragment_gallery" >
+        tools:layout="@layout/fragment_recordings_index" >
         <action
             android:id="@+id/nav_action_gallery_to_recording"
             app:destination="@id/nav_recording" >
@@ -42,5 +42,11 @@
             android:name="id"
             app:argType="long" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_songs_index"
+        android:name="com.benjaminnwarner.musicianstoolbelt.views.songs.SongsIndexFragment"
+        android:label="@string/songs"
+        tools:layout="@layout/fragment_songs_index"/>
 
 </navigation>

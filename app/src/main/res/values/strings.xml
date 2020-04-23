@@ -28,4 +28,5 @@
     <string name="filename">Filename:</string>
     <string name="recording">Recording</string>
     <string name="backup">Backup</string>
+    <string name="songs">Songs</string>
 </resources>

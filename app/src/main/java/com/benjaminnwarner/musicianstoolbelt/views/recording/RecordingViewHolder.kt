@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.views.gallery
+package com.benjaminnwarner.musicianstoolbelt.views.recording
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
