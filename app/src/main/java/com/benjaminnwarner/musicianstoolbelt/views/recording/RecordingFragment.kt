@@ -13,7 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.injectors.RecordingRepositoryInjector
 import com.benjaminnwarner.musicianstoolbelt.util.RecordingConstants
-import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModel
+import com.benjaminnwarner.musicianstoolbelt.viewmodels.recording.RecordingViewModel
 import com.benjaminnwarner.musicianstoolbelt.views.permissions.PermissionFragment
 import kotlinx.android.synthetic.main.fragment_recording.*
 import kotlinx.android.synthetic.main.fragment_recording.view.*

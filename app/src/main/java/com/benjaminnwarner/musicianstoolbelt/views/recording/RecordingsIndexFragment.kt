@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.benjaminnwarner.musicianstoolbelt.R
 import com.benjaminnwarner.musicianstoolbelt.database.recording.Recording
 import com.benjaminnwarner.musicianstoolbelt.injectors.RecordingRepositoryInjector
-import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingListViewModel
-import com.benjaminnwarner.musicianstoolbelt.views.recording.RecordingsIndexFragmentDirections
+import com.benjaminnwarner.musicianstoolbelt.viewmodels.recording.RecordingListViewModel
 import kotlinx.android.synthetic.main.fragment_recordings_index.view.*
 
 class RecordingsIndexFragment : Fragment() {
@@ -44,7 +43,7 @@ class RecordingsIndexFragment : Fragment() {
             adapter = recordingAdapter
         }
 
-        recordingListViewModel.recordings.observe(this, Observer {
+        recordingListViewModel.recordings.observe(viewLifecycleOwner, Observer {
             recordingAdapter =
                 RecordingAdapter(
                     it,

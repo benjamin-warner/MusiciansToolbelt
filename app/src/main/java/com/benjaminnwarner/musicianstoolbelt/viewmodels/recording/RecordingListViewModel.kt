@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.viewmodels
+package com.benjaminnwarner.musicianstoolbelt.viewmodels.recording
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

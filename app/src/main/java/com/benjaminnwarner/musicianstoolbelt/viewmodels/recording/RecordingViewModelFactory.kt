@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.viewmodels
+package com.benjaminnwarner.musicianstoolbelt.viewmodels.recording
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -14,6 +14,10 @@ class RecordingViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return RecordingViewModel(recordingRepository, id, application) as T
+        return RecordingViewModel(
+            recordingRepository,
+            id,
+            application
+        ) as T
     }
 }

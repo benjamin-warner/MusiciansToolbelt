@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import com.benjaminnwarner.musicianstoolbelt.database.AppDatabase
 import com.benjaminnwarner.musicianstoolbelt.database.recording.RecordingRepository
-import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingListViewModelFactory
-import com.benjaminnwarner.musicianstoolbelt.viewmodels.RecordingViewModelFactory
+import com.benjaminnwarner.musicianstoolbelt.viewmodels.recording.RecordingListViewModelFactory
+import com.benjaminnwarner.musicianstoolbelt.viewmodels.recording.RecordingViewModelFactory
 
 object RecordingRepositoryInjector {
 
@@ -29,6 +29,8 @@ object RecordingRepositoryInjector {
     fun provideRecordingListViewModelFactory(
         context: Context
     ): RecordingListViewModelFactory {
-        return RecordingListViewModelFactory(getRecordingRepository(context))
+        return RecordingListViewModelFactory(
+            getRecordingRepository(context)
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.benjaminnwarner.musicianstoolbelt.viewmodels
+package com.benjaminnwarner.musicianstoolbelt.viewmodels.recording
 
 import android.app.Application
 import android.content.Intent
