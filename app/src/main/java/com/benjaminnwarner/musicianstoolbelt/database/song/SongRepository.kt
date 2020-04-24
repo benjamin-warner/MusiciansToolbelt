@@ -1,14 +1,14 @@
 package com.benjaminnwarner.musicianstoolbelt.database.song
 
-class SongRepository private constructor(private val recordingDao: SongDao) {
+class SongRepository private constructor(private val songDao: SongDao) {
 
-    suspend fun getSongs() = recordingDao.getSongs()
+    suspend fun getSongs() = songDao.getSongs()
 
-    suspend fun getSong(id: Long) = recordingDao.getSong(id)
+    suspend fun getSong(id: Long) = songDao.getSong(id)
 
-    suspend fun saveSong(recording: Song) = recordingDao.insert(recording)
+    suspend fun saveSong(recording: Song) = songDao.insert(recording)
 
-    suspend fun delete(recording: Song) = recordingDao.delete(recording)
+    suspend fun delete(recording: Song) = songDao.delete(recording)
 
     companion object {
         @Volatile private var instance: SongRepository? = null

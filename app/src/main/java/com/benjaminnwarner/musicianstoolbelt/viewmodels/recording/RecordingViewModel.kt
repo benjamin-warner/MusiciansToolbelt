@@ -36,7 +36,7 @@ class RecordingViewModel(
                 val filename =
                     filesDir + TimeHelpers.unixToFileTimestamp(System.currentTimeMillis()) +
                             RecordingConstants.DEFAULT_RECORDING_EXTENSION
-                val newRecording = Recording(id, Date(), "New Recording", filename)
+                val newRecording = Recording(id, Date(), Date(), "New Recording", filename)
                 mutableRecording.value = newRecording
                 emit(newRecording)
             } else {
