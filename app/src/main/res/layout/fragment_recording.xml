@@ -72,4 +72,40 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/fragment_recording_created_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/created"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_recording_filename_label" />
+
+    <TextView
+        android:id="@+id/fragment_recording_created_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/fragment_recording_created_label"
+        app:layout_constraintStart_toEndOf="@+id/fragment_recording_created_label" />
+
+    <TextView
+        android:id="@+id/fragment_recording_updated_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/last_updated"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_recording_created_label" />
+
+    <TextView
+        android:id="@+id/fragment_recording_updated_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/fragment_recording_updated_label"
+        app:layout_constraintStart_toEndOf="@+id/fragment_recording_updated_label" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

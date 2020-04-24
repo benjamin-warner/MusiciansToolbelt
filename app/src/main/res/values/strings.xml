@@ -25,8 +25,10 @@
     <string name="recording_details">Recording Details</string>
     <string name="re_record">Re-record</string>
     <string name="recordings">Recordings</string>
-    <string name="filename">Filename:</string>
+    <string name="filename">Filename</string>
     <string name="recording">Recording</string>
     <string name="backup">Backup</string>
     <string name="songs">Songs</string>
+    <string name="last_updated">Last updated</string>
+    <string name="created">Created</string>
 </resources>

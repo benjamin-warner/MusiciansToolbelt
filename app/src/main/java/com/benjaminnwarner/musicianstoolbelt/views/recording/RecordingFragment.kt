@@ -53,8 +53,10 @@ class RecordingFragment: PermissionFragment(RecordingPermission) {
             setRecordingWrittenCallback(this@RecordingFragment::onRecordingWritten)
         }
 
-        recordingViewModel.recording.observe(this) { recording ->
+        recordingViewModel.recording.observe(viewLifecycleOwner) { recording ->
             root.fragment_recording_name_input.setText(recording.name)
+            root.fragment_recording_created_at.text = recording.createdAt.toString()
+            root.fragment_recording_updated_at.text = recording.updatedAt.toString()
 
             if (recording.id == 0L) {
                 root.fragment_recording_playback_recorder.audioSource =
