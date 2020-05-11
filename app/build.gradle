@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation "io.arrow-kt:arrow-core:$arrow_version"
     implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+    implementation "io.arrow-kt:arrow-fx:$arrow_version"
     kapt "io.arrow-kt:arrow-meta:$arrow_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
